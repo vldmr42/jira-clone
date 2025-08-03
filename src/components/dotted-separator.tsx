@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import { cn } from '@/lib/utils';
 
 interface DottedSeparatorProps {
@@ -9,7 +11,7 @@ interface DottedSeparatorProps {
     direction?: 'horizontal' | 'vertical';
 }
 
-export const DottedSeparator = ({
+export const Separator = ({
     className,
     color = '#d4d4d8',
     height = '2px',
@@ -46,3 +48,5 @@ export const DottedSeparator = ({
         </div>
     );
 };
+
+export const DottedSeparator = memo(Separator);
