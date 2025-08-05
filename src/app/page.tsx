@@ -1,15 +1,19 @@
-import { Button } from '@/components/ui/button';
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
+import { useCurrent } from '@/features/auth/api/use-current';
 
 export default function Home() {
-    return (
-        <div className="flex gap-6">
-            <Button>Primary</Button>
-            <Button variant={'secondary'}>Secondary</Button>
-            <Button variant={'ghost'}>Ghost</Button>
-            <Button variant={'outline'}>Outline</Button>
-            <Button variant={'destructive'}>Destructive</Button>
-            <Button variant={'muted'}>Muted</Button>
-            <Button variant={'tertiary'}>Tertiary</Button>
-        </div>
-    );
+    const router = useRouter();
+    const { data, isLoading } = useCurrent();
+
+    useEffect(() => {
+        if (!data && !isLoading) {
+            router.push('/sign-in');
+        }
+    }, [data]);
+
+    return <div className="flex gap-6">Only visible to authorized users</div>;
 }
