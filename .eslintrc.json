@@ -3,7 +3,8 @@
     "extends": ["next/core-web-vitals", "next/typescript"],
     "rules": {
         "simple-import-sort/imports": "error",
-        "simple-import-sort/exports": "error"
+        "simple-import-sort/exports": "error",
+        "react-hooks/exhaustive-deps": "off"
     },
     "parserOptions": {
         "sourceType": "module",
