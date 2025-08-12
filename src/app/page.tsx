@@ -1,20 +1,13 @@
-'use client';
+import { redirect } from 'next/navigation';
 
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-
-import { useCurrent } from '@/features/auth/api/use-current';
+import { getCurrent } from '@/features/auth/actions';
 import { UserButton } from '@/features/auth/components/user-button';
 
-export default function Home() {
-    const router = useRouter();
-    const { data, isLoading } = useCurrent();
-
-    useEffect(() => {
-        if (!data && !isLoading) {
-            router.push('/sign-in');
-        }
-    }, [data]);
+export default async function Home() {
+    const user = await getCurrent();
+    if (!user) {
+        redirect('/sign-in');
+    }
 
     return (
         <div className="flex gap-6">
