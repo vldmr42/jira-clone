@@ -22,10 +22,10 @@ export const MobileSidebar = () => {
                 <Button variant={'secondary'} className="lg:hidden">
                     <MenuIcon className="size-4 text-neutral-500" />
                 </Button>
-                <SheetContent side="left" className="p-0">
-                    <Sidebar />
-                </SheetContent>
             </SheetTrigger>
+            <SheetContent side="left" className="p-0">
+                <Sidebar />
+            </SheetContent>
         </Sheet>
     );
 };
