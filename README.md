@@ -2,6 +2,15 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Env variables required to run
+
+-   NEXT_PUBLIC_APP_URL
+-   NEXT_PUBLIC_APPWRITE_ENDPOINT
+-   NEXT_PUBLIC_APPWRITE_PROJECT
+-   NEXT_PUBLIC_APPWRITE_DATABASE_ID
+-   NEXT_PUBLIC_APPWRITE_COLLECTIONS_WORKSPACES_ID
+-   NEXT_APPWRITE_KEY
+
 First, run the development server:
 
 ```bash

@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import { getCurrent } from '@/features/auth/actions';
+import { CreateWorkspaceForm } from '@/features/workspaces/components/create-workspace-form';
 
 export default async function Home() {
     const user = await getCurrent();
@@ -8,5 +9,9 @@ export default async function Home() {
         redirect('/sign-in');
     }
 
-    return <div className="flex gap-6">This is Home page</div>;
+    return (
+        <div className="flex gap-6">
+            <CreateWorkspaceForm />
+        </div>
+    );
 }
