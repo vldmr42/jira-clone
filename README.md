@@ -9,6 +9,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 -   NEXT_PUBLIC_APPWRITE_PROJECT
 -   NEXT_PUBLIC_APPWRITE_DATABASE_ID
 -   NEXT_PUBLIC_APPWRITE_COLLECTIONS_WORKSPACES_ID
+-   NEXT_PUBLIC_APPWRITE_IMAGES_BUCKET_ID
 -   NEXT_APPWRITE_KEY
 
 First, run the development server:
