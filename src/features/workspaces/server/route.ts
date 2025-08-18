@@ -1,6 +1,6 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { ID } from 'node-appwrite';
+import { ID, Query } from 'node-appwrite';
 
 import {
     DATABASE_ID,
@@ -15,11 +15,27 @@ import { createWorkspaceSchema } from '../schema';
 
 const app = new Hono()
     .get('/', sessionMiddleware, async (c) => {
+        const user = c.get('user');
         const databases = c.get('databases');
+
+        const members = await databases.listDocuments(
+            DATABASE_ID,
+            MEMBERS_COLLETION_ID,
+            [Query.equal('userId', user.$id)]
+        );
+
+        if (members.total === 0) {
+            return c.json({ data: { daocuments: [], total: 0 } });
+        }
+
+        const workspaceIds = members.documents.map(
+            (member) => member.workspaceId
+        );
 
         const workspaces = await databases.listDocuments(
             DATABASE_ID,
-            WORKSPACE_COLLECTION_ID
+            WORKSPACE_COLLECTION_ID,
+            [Query.orderDesc('$createdAt'), Query.contains('$id', workspaceIds)]
         );
 
         return c.json({ data: workspaces });
