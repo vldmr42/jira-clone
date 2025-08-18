@@ -10,6 +10,7 @@ import {
 } from '@/config';
 import { MemberRole } from '@/features/members/types';
 import { sessionMiddleware } from '@/lib/session-middleware';
+import { generateInviteCode } from '@/lib/utils';
 
 import { createWorkspaceSchema } from '../schema';
 
@@ -78,6 +79,7 @@ const app = new Hono()
                     name,
                     userId: user.$id,
                     imageUrl: uploadedImageUrl,
+                    inviteCode: generateInviteCode(6),
                 }
             );
 
