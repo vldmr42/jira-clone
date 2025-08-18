@@ -5,8 +5,10 @@ import { ID } from 'node-appwrite';
 import {
     DATABASE_ID,
     IMAGES_BUCKET_ID,
+    MEMBERS_COLLETION_ID,
     WORKSPACE_COLLECTION_ID,
 } from '@/config';
+import { MemberRole } from '@/features/members/types';
 import { sessionMiddleware } from '@/lib/session-middleware';
 
 import { createWorkspaceSchema } from '../schema';
@@ -60,6 +62,17 @@ const app = new Hono()
                     name,
                     userId: user.$id,
                     imageUrl: uploadedImageUrl,
+                }
+            );
+
+            await databases.createDocument(
+                DATABASE_ID,
+                MEMBERS_COLLETION_ID,
+                ID.unique(),
+                {
+                    userId: user.$id,
+                    workspaceId: workspace.$id,
+                    role: MemberRole.ADMIN,
                 }
             );
 
