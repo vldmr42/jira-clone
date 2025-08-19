@@ -26,7 +26,7 @@ const app = new Hono()
         );
 
         if (members.total === 0) {
-            return c.json({ data: { daocuments: [], total: 0 } });
+            return c.json({ data: { documents: [], total: 0 } });
         }
 
         const workspaceIds = members.documents.map(

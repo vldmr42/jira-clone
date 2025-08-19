@@ -10,6 +10,7 @@ export const useGetWorkspaces = () => {
 
             if (!response.ok) {
                 throw new Error('Failed to fetch workspaces');
+                // return { total: 0, documents: [] };
             }
 
             const { data } = await response.json();
