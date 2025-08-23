@@ -10,6 +10,8 @@ import {
 } from '@/config';
 
 import { AUTH_COOKIE } from '../auth/constants';
+import { getMember } from '../members/utils';
+import { Workspace } from './types';
 
 export const getWorkspaces = async () => {
     try {
@@ -51,5 +53,48 @@ export const getWorkspaces = async () => {
     } catch (e) {
         console.log('error', e);
         return { documents: [], total: 0 };
+    }
+};
+
+interface GetWorkspaceProps {
+    workspaceId: string;
+}
+
+export const getWorkspace = async ({ workspaceId }: GetWorkspaceProps) => {
+    try {
+        const client = new Client()
+            .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
+            .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!);
+
+        const session = cookies().get(AUTH_COOKIE);
+        if (!session) {
+            return null;
+        }
+        client.setSession(session.value);
+
+        const databases = new Databases(client);
+        const account = new Account(client);
+        const user = await account.get();
+
+        const member = await getMember({
+            databases,
+            userId: user.$id,
+            workspaceId,
+        });
+
+        if (!member) {
+            return null;
+        }
+
+        const workspace = await databases.getDocument<Workspace>(
+            DATABASE_ID,
+            WORKSPACE_COLLECTION_ID,
+            workspaceId
+        );
+
+        return workspace;
+    } catch (e) {
+        console.log('error', e);
+        return null;
     }
 };
