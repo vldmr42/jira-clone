@@ -24,6 +24,7 @@ import { Input } from '@/components/ui/input';
 import { useConfirm } from '@/hooks/use-confirm';
 import { cn } from '@/lib/utils';
 
+import { useDeleteWorkspace } from '../api/use-delete-workspace';
 import { useUpdateWorkspace } from '../api/use-update-workspace';
 import { updateWorkspaceSchema } from '../schema';
 import { Workspace } from '../types';
@@ -39,6 +40,8 @@ export const EditWorkspaceForm = ({
 }: EditWorkspaceFormProps) => {
     const router = useRouter();
     const { mutate, isPending } = useUpdateWorkspace();
+    const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } =
+        useDeleteWorkspace();
 
     const [DeleteDialog, confirmDelete] = useConfirm(
         'Delete Workspace',
@@ -60,7 +63,16 @@ export const EditWorkspaceForm = ({
         const ok = await confirmDelete();
         if (!ok) return;
 
-        console.log('deleting...');
+        deleteWorkspace(
+            {
+                param: { workspaceId: initialValues.$id },
+            },
+            {
+                onSuccess: () => {
+                    window.location.href = '/';
+                },
+            }
+        );
     };
 
     const onSubmit = (values: z.infer<typeof updateWorkspaceSchema>) => {
@@ -263,7 +275,7 @@ export const EditWorkspaceForm = ({
                             size={'sm'}
                             variant={'destructive'}
                             type="button"
-                            disabled={isPending}
+                            disabled={isPending || isDeletingWorkspace}
                             onClick={handleDelete}
                         >
                             Delete Workspace
