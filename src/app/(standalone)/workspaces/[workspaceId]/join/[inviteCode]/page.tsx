@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import { getCurrent } from '@/features/auth/queries';
+import { JoinWorkspaceForm } from '@/features/workspaces/components/join-workspace-form';
 import { getWorkspaceInfo } from '@/features/workspaces/queries';
 
 interface WorkspaceIdJoinPageProps {
@@ -19,7 +20,15 @@ const WorkspaceIdJoinPage = async ({ params }: WorkspaceIdJoinPageProps) => {
         workspaceId: params.workspaceId,
     });
 
-    return <div>{JSON.stringify(workspace)}</div>;
+    if (!workspace) {
+        redirect('/');
+    }
+
+    return (
+        <div>
+            <JoinWorkspaceForm initialValues={workspace} />
+        </div>
+    );
 };
 
 export default WorkspaceIdJoinPage;
