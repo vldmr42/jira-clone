@@ -7,6 +7,7 @@ import { getWorkspaceInfo } from '@/features/workspaces/queries';
 interface WorkspaceIdJoinPageProps {
     params: {
         workspaceId: string;
+        inviteCode: string;
     };
 }
 

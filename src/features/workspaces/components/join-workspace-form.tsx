@@ -59,7 +59,7 @@ export const JoinWorkspaceForm = ({
             <div className="px-7">
                 <DottedSeparator />
             </div>
-            <CardContent>
+            <CardContent className="mt-2">
                 <div className="flex flex-col lg:flex-row gap-y-2 gap-x-2 items-center justify-between">
                     <Button
                         variant={'secondary'}
