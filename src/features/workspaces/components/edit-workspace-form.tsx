@@ -28,7 +28,7 @@ import { cn } from '@/lib/utils';
 import { useDeleteWorkspace } from '../api/use-delete-workspace';
 import { useResetInviteCode } from '../api/use-reset-invite-code';
 import { useUpdateWorkspace } from '../api/use-update-workspace';
-import { updateWorkspaceSchema } from '../schema';
+import { updateWorkspaceSchema } from '../schemas';
 import { Workspace } from '../types';
 
 interface EditWorkspaceFormProps {
@@ -90,16 +90,9 @@ export const EditWorkspaceForm = ({
         const ok = await confirmReset();
         if (!ok) return;
 
-        resetInviteCode(
-            {
-                param: { workspaceId: initialValues.$id },
-            },
-            {
-                onSuccess: () => {
-                    router.refresh();
-                },
-            }
-        );
+        resetInviteCode({
+            param: { workspaceId: initialValues.$id },
+        });
     };
 
     const onSubmit = (values: z.infer<typeof updateWorkspaceSchema>) => {
@@ -111,9 +104,8 @@ export const EditWorkspaceForm = ({
         mutate(
             { form: finalValues, param: { workspaceId: initialValues.$id } },
             {
-                onSuccess: ({ data }) => {
+                onSuccess: () => {
                     form.reset();
-                    router.push(`/workspaces/${data.$id}`);
                 },
             }
         );

@@ -14,7 +14,7 @@ import { getMember } from '@/features/members/utils';
 import { sessionMiddleware } from '@/lib/session-middleware';
 import { generateInviteCode } from '@/lib/utils';
 
-import { createWorkspaceSchema, updateWorkspaceSchema } from '../schema';
+import { createWorkspaceSchema, updateWorkspaceSchema } from '../schemas';
 import { Workspace } from '../types';
 
 const app = new Hono()

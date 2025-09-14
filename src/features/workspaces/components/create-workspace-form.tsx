@@ -24,7 +24,7 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 import { useCreateWorkspace } from '../api/use-create-workspace';
-import { createWorkspaceSchema } from '../schema';
+import { createWorkspaceSchema } from '../schemas';
 
 interface CreateWorkspaceFormProps {
     onCancel?: () => void;
