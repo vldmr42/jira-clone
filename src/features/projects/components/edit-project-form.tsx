@@ -24,6 +24,7 @@ import { Input } from '@/components/ui/input';
 import { useConfirm } from '@/hooks/use-confirm';
 import { cn } from '@/lib/utils';
 
+import { useDeleteProject } from '../api/use-delete-project';
 import { useUpdateProject } from '../api/use-update-project';
 import { updateProjectSchema } from '../schemas';
 import { Project } from '../types';
@@ -39,11 +40,11 @@ export const EditProjectForm = ({
 }: EditProjectFormProps) => {
     const router = useRouter();
     const { mutate, isPending } = useUpdateProject();
-    // const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } =
-    //     useDeleteWorkspace();
+    const { mutate: deleteProject, isPending: isDeletingProject } =
+        useDeleteProject();
 
     const [DeleteDialog, confirmDelete] = useConfirm(
-        'Delete Workspace',
+        'Delete Project',
         'This action cannot be undone.',
         'destructive'
     );
@@ -62,16 +63,16 @@ export const EditProjectForm = ({
         const ok = await confirmDelete();
         if (!ok) return;
 
-        // deleteWorkspace(
-        //     {
-        //         param: { workspaceId: initialValues.$id },
-        //     },
-        //     {
-        //         onSuccess: () => {
-        //             window.location.href = '/';
-        //         },
-        //     }
-        // );
+        deleteProject(
+            {
+                param: { projectId: initialValues.$id },
+            },
+            {
+                onSuccess: () => {
+                    window.location.href = `/workspaces/${initialValues.workspaceId}`;
+                },
+            }
+        );
     };
 
     const onSubmit = (values: z.infer<typeof updateProjectSchema>) => {
@@ -273,7 +274,7 @@ export const EditProjectForm = ({
                             size={'sm'}
                             variant={'destructive'}
                             type="button"
-                            disabled={isPending}
+                            disabled={isDeletingProject || isPending}
                             onClick={handleDelete}
                         >
                             Delete Project
