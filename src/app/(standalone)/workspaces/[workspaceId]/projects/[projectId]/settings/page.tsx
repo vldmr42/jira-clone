@@ -5,29 +5,29 @@ import { EditProjectForm } from '@/features/projects/components/edit-project-for
 import { getProject } from '@/features/projects/queries';
 
 interface ProjectIdSettingsPageProps {
-    params: {
-        projectId: string;
-    };
+  params: {
+    projectId: string;
+  };
 }
 
 const ProjectIdSettingsPage = async ({
-    params,
+  params,
 }: ProjectIdSettingsPageProps) => {
-    const user = await getCurrent();
+  const user = await getCurrent();
 
-    if (!user) {
-        redirect('/sign-in');
-    }
+  if (!user) {
+    redirect('/sign-in');
+  }
 
-    const initialValues = await getProject({
-        projectId: params.projectId,
-    });
+  const initialValues = await getProject({
+    projectId: params.projectId,
+  });
 
-    return (
-        <div className="w-full lg:max-w-xl">
-            <EditProjectForm initialValues={initialValues} />
-        </div>
-    );
+  return (
+    <div className="w-full lg:max-w-xl">
+      <EditProjectForm initialValues={initialValues} />
+    </div>
+  );
 };
 
 export default ProjectIdSettingsPage;
