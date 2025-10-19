@@ -5,6 +5,8 @@ import { useGetMembers } from '@/features/members/api/use-get-members';
 import { useGetProjects } from '@/features/projects/api/use-get-projects';
 import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id';
 
+import { CreateTaskForm } from './create-task-form';
+
 interface CreateTaskFormWrapperProps {
   onCancel: () => void;
 }
@@ -22,8 +24,8 @@ export const CreateTaskFormWrapper = ({
 
   const projectOptions = projects?.documents.map((project) => ({
     id: project.$id,
-    name: project.name,
-    imageUrl: project.imageUrl,
+    name: project.name as string,
+    imageUrl: project.imageUrl as string,
   }));
   const memberOptions = members?.documents.map((member) => ({
     id: member.$id,
@@ -43,9 +45,10 @@ export const CreateTaskFormWrapper = ({
   }
 
   return (
-    <div>
-      {JSON.stringify(projectOptions)}
-      {JSON.stringify(memberOptions)}
-    </div>
+    <CreateTaskForm
+      onCancel={onCancel}
+      projectOptions={projectOptions ?? []}
+      memberOptions={memberOptions ?? []}
+    />
   );
 };
