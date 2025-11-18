@@ -10,6 +10,7 @@ import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id';
 
 import { useGetTasks } from '../api/use-get-tasks';
 import { useCreateTaskModal } from '../hooks/use-create-task-modal';
+import { DataFilters } from './data-filters';
 
 export const TaskViewSwitcher = () => {
   const [view, setView] = useQueryState('task-view', {
@@ -47,7 +48,7 @@ export const TaskViewSwitcher = () => {
           </Button>
         </div>
         <DottedSeparator className="my-4" />
-        Data filters
+        <DataFilters />
         <DottedSeparator className="my-4" />
         {isLoadingTasks ? (
           <div className="w-full border rounded-lg h-[200px] flex flex-col items-center justify-center">
