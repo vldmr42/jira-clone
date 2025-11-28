@@ -1,6 +1,7 @@
 import { SelectValue } from '@radix-ui/react-select';
 import { ListCheckIcon } from 'lucide-react';
 
+import { DatePicker } from '@/components/date-picker';
 import {
   Select,
   SelectContent,
@@ -120,6 +121,14 @@ export const DataFilters = ({ hideProjectFilter }: DataFilterProps) => {
           ))}
         </SelectContent>
       </Select>
+      <DatePicker
+        placeholder="Due date"
+        className="h-8 w-full lg:w-auto"
+        value={dueDate ? new Date(dueDate) : undefined}
+        onChange={(date) => {
+          setFilters({ dueDate: date ? date.toISOString() : null });
+        }}
+      />
     </div>
   );
 };
