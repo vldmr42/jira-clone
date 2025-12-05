@@ -106,7 +106,7 @@ const app = new Hono()
         );
 
         const assignee = assignees.find(
-          (assignee) => assignee?.$id === task.assagneeId
+          (assignee) => assignee?.$id === task.assigneeId
         );
 
         return {
