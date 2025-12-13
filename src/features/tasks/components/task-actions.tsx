@@ -1,4 +1,5 @@
 import { ExternalLinkIcon, PencilIcon, TrashIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import {
   DropdownMenu,
@@ -6,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id';
 import { useConfirm } from '@/hooks/use-confirm';
 
 import { useDeleteTask } from '../api/use-delete-task';
@@ -17,11 +19,13 @@ interface TaskActionsProps {
 }
 
 export const TaskActions = ({ id, projectId, children }: TaskActionsProps) => {
+  const router = useRouter();
   const [ConfirmDialog, confirm] = useConfirm(
     'Delete task',
     'This action cannot be undone',
     'destructive'
   );
+  const workspaceId = useWorkspaceId();
 
   const { mutate, isPending } = useDeleteTask();
 
@@ -32,17 +36,31 @@ export const TaskActions = ({ id, projectId, children }: TaskActionsProps) => {
     mutate({ param: { taskId: id } });
   };
 
+  const onOpenTask = () => {
+    router.push(`/workspace/${workspaceId}/tasks/${id}`);
+  };
+
+  const onOpenProject = () => {
+    router.push(`/workspace/${workspaceId}/projects/${projectId}`);
+  };
+
   return (
     <div className="flex justify-end">
       <ConfirmDialog />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuItem onClick={() => {}} className="font-medium p-[10px]">
+          <DropdownMenuItem
+            onClick={onOpenTask}
+            className="font-medium p-[10px]"
+          >
             <ExternalLinkIcon className="size-4 mr-2 stroke-2" />
             Task Details
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => {}} className="font-medium p-[10px]">
+          <DropdownMenuItem
+            onClick={onOpenProject}
+            className="font-medium p-[10px]"
+          >
             <ExternalLinkIcon className="size-4 mr-2 stroke-2" />
             Open Project
           </DropdownMenuItem>
