@@ -196,6 +196,51 @@ const app = new Hono()
     await databases.deleteDocument(DATABASE_ID, TASKS_COLLECTION_ID, taskId);
 
     return c.json({ data: { $id: task.$id } });
-  });
+  })
+  .patch(
+    '/:taskId',
+    sessionMiddleware,
+    zValidator('json', createTaskSchema.partial()),
+    async (c) => {
+      const user = c.get('user');
+      const databases = c.get('databases');
+      const { name, status, projectId, dueDate, assigneeId, description } =
+        c.req.valid('json');
+
+      const { taskId } = c.req.param();
+
+      const existingTask = await databases.getDocument(
+        DATABASE_ID,
+        TASKS_COLLECTION_ID,
+        taskId
+      );
+
+      const member = await getMember({
+        databases,
+        workspaceId: existingTask.workspaceId,
+        userId: user.$id,
+      });
+
+      if (!member) {
+        return c.json({ error: 'Unauthorized' }, 410);
+      }
+
+      const task = await databases.updateDocument<Task>(
+        DATABASE_ID,
+        TASKS_COLLECTION_ID,
+        taskId,
+        {
+          name,
+          status,
+          projectId,
+          dueDate,
+          assigneeId,
+          description,
+        }
+      );
+
+      return c.json({ data: task });
+    }
+  );
 
 export default app;
