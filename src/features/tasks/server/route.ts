@@ -30,7 +30,7 @@ const app = new Hono()
         status: z.enum(TaskStatus).nullish(),
         search: z.string().nullish(),
         dueDate: z.string().nullish(),
-      })
+      }),
     ),
     async (c) => {
       const { users } = await createAdminClient();
@@ -71,7 +71,7 @@ const app = new Hono()
       const tasks = await databases.listDocuments<Task>(
         DATABASE_ID,
         TASKS_COLLECTION_ID,
-        query
+        query,
       );
 
       const projectIds = tasks.documents.map((task) => task.projectId);
@@ -80,12 +80,12 @@ const app = new Hono()
       const projects = await databases.listDocuments<Project>(
         DATABASE_ID,
         PROJECTS_COLLECTION_ID,
-        projectIds.length > 0 ? [Query.contains('$id', projectIds)] : []
+        projectIds.length > 0 ? [Query.contains('$id', projectIds)] : [],
       );
       const members = await databases.listDocuments(
         DATABASE_ID,
         MEMBERS_COLLETION_ID,
-        assigneeIds.length > 0 ? [Query.contains('$id', assigneeIds)] : []
+        assigneeIds.length > 0 ? [Query.contains('$id', assigneeIds)] : [],
       );
 
       const assignees = await Promise.all(
@@ -97,16 +97,16 @@ const app = new Hono()
             name: user.name,
             email: user.email,
           };
-        })
+        }),
       );
 
       const populatedTAsks = tasks.documents.map((task) => {
         const project = projects.documents.find(
-          (project) => project.$id === task.projectId
+          (project) => project.$id === task.projectId,
         );
 
         const assignee = assignees.find(
-          (assignee) => assignee?.$id === task.assigneeId
+          (assignee) => assignee?.$id === task.assigneeId,
         );
 
         return {
@@ -117,7 +117,7 @@ const app = new Hono()
       });
 
       return c.json({ data: { ...tasks, documents: populatedTAsks } });
-    }
+    },
   )
   .post(
     '/',
@@ -146,7 +146,7 @@ const app = new Hono()
           Query.equal('workspaceId', workspaceId),
           Query.orderAsc('position'),
           Query.limit(1),
-        ]
+        ],
       );
 
       const newPosition =
@@ -166,11 +166,11 @@ const app = new Hono()
           dueDate,
           assigneeId,
           position: newPosition,
-        }
+        },
       );
 
       return c.json({ data: task });
-    }
+    },
   )
   .delete('/:taskId', sessionMiddleware, async (c) => {
     const user = c.get('user');
@@ -180,7 +180,7 @@ const app = new Hono()
     const task = await databases.getDocument<Task>(
       DATABASE_ID,
       TASKS_COLLECTION_ID,
-      taskId
+      taskId,
     );
 
     const member = await getMember({
@@ -212,7 +212,7 @@ const app = new Hono()
       const existingTask = await databases.getDocument(
         DATABASE_ID,
         TASKS_COLLECTION_ID,
-        taskId
+        taskId,
       );
 
       const member = await getMember({
@@ -236,11 +236,61 @@ const app = new Hono()
           dueDate,
           assigneeId,
           description,
-        }
+        },
       );
 
       return c.json({ data: task });
+    },
+  )
+  .get('/:taskId', sessionMiddleware, async (c) => {
+    const currentUser = c.get('user');
+    const databases = c.get('databases');
+    const { users } = await createAdminClient();
+    const { taskId } = c.req.param();
+
+    const task = await databases.getDocument<Task>(
+      DATABASE_ID,
+      TASKS_COLLECTION_ID,
+      taskId,
+    );
+
+    const currentMember = await getMember({
+      databases,
+      workspaceId: task.workspaceId,
+      userId: currentUser.$id,
+    });
+
+    if (!currentMember) {
+      return c.json({ error: 'Unathorized' }, 401);
     }
-  );
+
+    const project = await databases.getDocument<Project>(
+      DATABASE_ID,
+      PROJECTS_COLLECTION_ID,
+      task.projectId,
+    );
+
+    const member = await databases.getDocument(
+      DATABASE_ID,
+      MEMBERS_COLLETION_ID,
+      task.assigneeId,
+    );
+
+    const user = await users.get(member.userId);
+
+    const assignee = {
+      ...member,
+      name: user.name,
+      email: user.email,
+    };
+
+    return c.json({
+      data: {
+        ...task,
+        project,
+        assignee,
+      },
+    });
+  });
 
 export default app;
