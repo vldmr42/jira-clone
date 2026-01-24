@@ -6,7 +6,7 @@ import { useGetProjects } from '@/features/projects/api/use-get-projects';
 import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id';
 
 import { useGetTask } from '../api/use-get-task';
-import { CreateTaskForm } from './create-task-form';
+import { EditTaskForm } from './edit-task-form';
 
 interface EditTaskFormWrapperProps {
   onCancel: () => void;
@@ -57,8 +57,9 @@ export const EditTaskFormWrapper = ({
   }
 
   return (
-    <CreateTaskForm
+    <EditTaskForm
       onCancel={onCancel}
+      initialValues={initialValues}
       projectOptions={projectOptions ?? []}
       memberOptions={memberOptions ?? []}
     />
