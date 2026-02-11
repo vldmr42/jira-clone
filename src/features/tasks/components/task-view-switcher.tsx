@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id';
 
+import { useBulkUpdateTasks } from '../api/use-bulk-update-tasks';
 import { useGetTasks } from '../api/use-get-tasks';
 import { useCreateTaskModal } from '../hooks/use-create-task-modal';
 import { useTaskFilters } from '../hooks/use-task-filters';
@@ -35,11 +36,15 @@ export const TaskViewSwitcher = () => {
   });
   const { open } = useCreateTaskModal();
 
+  const { mutate: bulkUpdate } = useBulkUpdateTasks();
+
   const onKanbanChange = useCallback(
     (tasks: { $id: string; status: TaskStatus; position: number }[]) => {
-      console.log(tasks);
+      bulkUpdate({
+        json: { tasks },
+      });
     },
-    [],
+    [bulkUpdate],
   );
 
   return (
